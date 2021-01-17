@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>환율계산</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<!--<div class="container border" style="max-width: 600px;">-->
+<div class="col-sm-12">
+  <div class="col-sm-4">
+    <h1>환율 계산</h1>
+    <form>
+      <div class="form-group">
+        <label for="send_country">송금국가: </label>
+        <input type="text" class="form-control" id="send_country" value="미국(USD)" readonly>
+      </div>
+      <div class="form-group">
+        <label for="country">수취국가: </label>
+        <select id="country" class="custom-select" th:remove="all-but-first">
+          <option th:each="data : ${currencyLayer}" th:value="${data.country}" th:data-exrate="${data.exrate}" th:data-text="${data.exrateFormatText}" th:selected="${data.country eq 'KRW'}" th:text="${data.countryName}"></option>
+          <option value="KRW" selected>한국(KRW)</option>
+          <option value="JPY">일본(JPY)</option>
+          <option value="PHP">필리핀(PHP)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="exrate_text">환율: </label>
+        <input type="text" class="form-control" id="exrate_text" readonly>
+      </DIV>
+      <div class="form-group">
+        <label for="send_money">송금액: </label>
+        <input type="number" class="form-control" id="send_money" placeholder="송금액을 입력하세요">USD
+      </div>
+    </form>
+
+    <button type="button" class="btn btn-primary" id="btn-submit">Submit</button>
+    <div class="alert alert-danger" id="message" style="display: none;"></div>
+  </div>
+</div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script>
+  var index = {
+    init: function () {
+      var _this = this;
+      $('#btn-submit').on('click', function () {
+        _this.submit();
+      });
+      $('#country').on('change', function () {
+        $('#message').hide();
+        $('#exrate_text').val($('#country option:checked').data('text') + ' ' + $('#country').val() + '/USD');
+      });
+      $('#country').trigger('change');
+    },
+    submit: function () {
+      var data = {
+        country: $('#country').val(),
+        exrate: $('#country option:checked').data('exrate'),
+        sendMoney: $('#send_money').val()
+      };
+
+      $.ajax({
+        type: 'POST',
+        url: '/api/exrate',
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(data)
+      }).done(function (result) {
+        $('#message').text(result.message).show();
+        if(!result.exrateSendMoney){
+          $('#send_money').focus();
+        }
+      }).fail(function (error) {
+        $('#message').text("[오류 발생]입력 값 확인 후 다시 시도해 주세요.").show();
+      })
+    }
+  };
+  index.init();
+</script>
+</body>
+</html>
