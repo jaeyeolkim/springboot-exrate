@@ -97,7 +97,7 @@ public class ExrateApiControllerTest {
         // then
         assertThat(constraintViolations)
                 .extracting(ConstraintViolation::getMessage)
-                .containsOnly("0 이상이어야 합니다");
+                .containsOnly("1 이상이어야 합니다");
     }
 
     @Test
