@@ -15,11 +15,11 @@ public class ExrateApiController {
 
     @PostMapping("/api/exrate")
     public ExrateResponseDto exrate(@Valid @RequestBody ExrateRequestDto requestDto, BindingResult bindingResult) {
-        Exrate exrate = requestDto.toEntity();
         if (bindingResult.hasErrors()) {
             return new ExrateResponseDto("송금액이 바르지 않습니다");
         }
 
+        Exrate exrate = requestDto.toEntity();
         // 수취금액 계산
         exrate.saveExrateSendMoney();
         return new ExrateResponseDto(exrate);
