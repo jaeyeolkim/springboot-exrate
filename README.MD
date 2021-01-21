@@ -2,9 +2,10 @@
 
 ### Tech
 
+* JDK 11
 * Spring Boot 2.3.8
 * Spring Web 5.2.12
-* JUnit 4
+* JUnit 4.13.1
 * Thymeleaf 3.0.12
 * jQuery 3.3.1
 * Bootstrap 4.3.1
