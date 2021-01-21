@@ -32,8 +32,8 @@ public class IndexControllerTest {
     @Test
     public void 실시간환율API호출() throws Exception {
         // given
-        String url = "http://www.apilayer.net/api/live?access_key=ee50cd7cc73c9b7a7bb3d9617cfb6b9c";
-//        String url = "http://api.currencylayer.com/live?access_key=202068f55509800ad8e4051e0e36df3f&format=1";
+//        String url = "http://www.apilayer.net/api/live?access_key=ee50cd7cc73c9b7a7bb3d9617cfb6b9c"; // test url
+        String url = "http://api.currencylayer.com/live?access_key=202068f55509800ad8e4051e0e36df3f&format=1"; // 발급받은 url
 
         // when
         ResponseEntity<CurrencyLayerDto> responseEntity = restTemplate.getForEntity(url, CurrencyLayerDto.class);
